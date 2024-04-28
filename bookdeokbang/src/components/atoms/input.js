@@ -1,19 +1,22 @@
 import styled from "styled-components";
 import { Input } from "@mui/joy";
 
-export const login = styled(Input)`
+
+const Login_Input = styled(Input)`
   width: 120px;
   height: 50px;
   border-radius : 30px;
 `;
 
-export const main = styled(Input)`
+export const Main = styled(Input)`
   width: 120px;
   height: 50px;
   border-radius : 10px;
 `;
 
-export const info = styled(Input)`
+export const Info = styled(Input)`
   width: 120px;
   height: 50px;
 `;
+
+export default Login_Input;

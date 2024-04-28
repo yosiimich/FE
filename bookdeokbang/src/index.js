@@ -10,9 +10,9 @@ const root=ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
-      <GlobalStyles>
+      <GlobalStyles/>
         <Router/>
-      </GlobalStyles>
+
     </ThemeProvider>
   </StyledEngineProvider>
 );
