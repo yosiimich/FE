@@ -82,7 +82,7 @@ const Menu = styled.div`
 
 const MenuItem = styled.h2`
     font-size: 9px;
-    font-family: 'engLogo';
+    font-family: 'Logo';
     margin: 0;
     text-align: right;
     width: fit-content;
@@ -99,7 +99,7 @@ const Title = styled.h1`
 
 const Info = styled.h1`
     font-size: 24px;
-    font-family: 'engLogo';
+    font-family: 'Logo';
     text-align: center;
 `;
 

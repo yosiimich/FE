@@ -20,6 +20,9 @@ const Container = styled.div`
     justify-content: center; /* 변경 */
 `;
 
+const Title = styled.div`
+    margin-bottom: 2vh;
+`;
 
 const WhiteBox1 = styled.div`
     width: 100%;
@@ -32,7 +35,7 @@ const WhiteBox1 = styled.div`
 `;
 
 
-const Title = styled.h1`
+const Font_Title = styled.h1`
     font-size: 20px;
     font-family: 'Logo';
     margin: 0;
@@ -47,7 +50,9 @@ const Search = () => {
     return (
         <Base>
             <Container>
-                <Title>최근 검색 내역</Title>
+                <Title>
+                    <Font_Title>최근 검색 내역</Font_Title>
+                </Title>
                 <WhiteBox1 />
                 <WhiteBox1 />
                 <WhiteBox1 />

@@ -2,19 +2,19 @@
     font-family: "Logo";
     font-style: normal;
     font-weight: 100;
-    src:url("./BMHANNAAir_ttf.ttf") format("ttf")
+    src:url("./BMHANNAAir_ttf.ttf");
 }
 
 @font-face{
     font-family: "H1";
     font-style: normal;
     font-weight: 200;
-    src:url("./BMHANNAAir_ttf.ttf") format("ttf")
+    src:url("./BMHANNAAir_ttf.ttf");
 }
 
 @font-face{
     font-family: "engLogo";
     font-style: normal;
     font-weight: 800;
-    src:url("./Schoolbell-Regular.ttf") format("ttf")
+    src:url("./Schoolbell-Regular.ttf");
 }

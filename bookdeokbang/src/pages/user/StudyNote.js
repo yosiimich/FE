@@ -55,8 +55,18 @@ const SaveBox = styled.div`
     font-size: 16px; /* 고정된 글꼴 크기 설정 */
 `;
 
-const Title = styled.h1`
+const Title=styled.div`
+    margin-bottom:2vh;
+`;
+
+const Font_Title = styled.h1`
     font-size: 30px;
+    font-family: 'Logo';
+    margin: 0;
+    text-align: left;
+`;
+const Font_Button = styled.h1`
+    font-size: 15px;
     font-family: 'Logo';
     margin: 0;
     text-align: left;
@@ -70,10 +80,14 @@ const StudyNote = () => {
     return (
         <Base>
             <Container>
-                <Title>학습노트</Title>
+                <Title>
+                    <Font_Title>학습 노트</Font_Title>
+                </Title>
                 <WhiteBox1 />
                 <Memo />
-                <SaveBox>학습종료</SaveBox>
+                <SaveBox>
+                    <Font_Button>학습종료</Font_Button>
+                </SaveBox>
             </Container>
         </Base>
     );

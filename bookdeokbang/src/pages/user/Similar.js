@@ -44,12 +44,21 @@ const SaveBox = styled.div`
     align-items: center; /* 텍스트를 수직 정렬하기 위해 추가 */
     justify-content: center; /* 텍스트를 수평 정렬하기 위해 추가 */
     font-size: 16px; /* 고정된 글꼴 크기 설정 */
+
+`;
+const Title = styled.div`
+    margin-bottom: 2vh;
 `;
 
 
-
-const Title = styled.h1`
+const Font_Title = styled.h1`
     font-size: 20px;
+    font-family: 'Logo';
+    margin: 0;
+    text-align: left;
+`;
+const Font_Button = styled.h1`
+    font-size: 15px;
     font-family: 'Logo';
     margin: 0;
     text-align: left;
@@ -63,14 +72,21 @@ const Similar = () => {
     return (
         <Base>
             <Container>
-                <Title>AI가 추천하는 유사문장</Title>
+                <Title>
+                    <Font_Title>AI가 추천하는 유사문장</Font_Title>
+                </Title>
+                
                 <WhiteBox1 />
                 <WhiteBox1 />
                 <WhiteBox1 />
 
                 <Body>
-                    <SaveBox>추천문장 저장하기</SaveBox>
-                    <SaveBox>학습 종료</SaveBox>
+                    <SaveBox>
+                        <Font_Button>추천문장 저장하기</Font_Button>
+                    </SaveBox>
+                    <SaveBox>
+                        <Font_Button>학습 종료</Font_Button>
+                    </SaveBox>
 
                     
                 </Body>
