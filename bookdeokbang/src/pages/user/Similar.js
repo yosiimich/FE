@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button_main from "../../components/atoms/button";
+import { Link } from 'react-router-dom';
 
 const Base = styled.div`
     width: 100%;
@@ -63,7 +64,16 @@ const Font_Button = styled.h1`
     margin: 0;
     text-align: left;
 `;
-
+const Font_Body = styled.h1`
+    font-size: 20px;
+    font-family: 'engLogo';
+    margin: 5;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    height: 100%; /* 부모 요소의 높이를 따라가도록 설정 */
+`;
 const Body = styled.div`
     width: 100%; /* 최대 너비 설정 */
 `;
@@ -75,20 +85,28 @@ const Similar = () => {
                 <Title>
                     <Font_Title>AI가 추천하는 유사문장</Font_Title>
                 </Title>
-                
-                <WhiteBox1 />
-                <WhiteBox1 />
-                <WhiteBox1 />
+                    
+                <WhiteBox1>
+                    <Font_Body>They plan to improve their writing skills soon.</Font_Body>
+                </WhiteBox1>
+                <WhiteBox1>
+                    <Font_Body>I want to improve my writing, speaking, and communication skills.</Font_Body>
+                </WhiteBox1>
+                <WhiteBox1>
+                    <Font_Body>I listen to English news every morning to practice English.</Font_Body>
+                </WhiteBox1>
 
                 <Body>
                     <SaveBox>
-                        <Font_Button>추천문장 저장하기</Font_Button>
+                        <Link to="/studynote">
+                            <Font_Button>추천문장 저장하기</Font_Button>
+                        </Link>
                     </SaveBox>
                     <SaveBox>
-                        <Font_Button>학습 종료</Font_Button>
+                        <Link to="/main">
+                            <Font_Button>학습 종료</Font_Button>
+                        </Link>
                     </SaveBox>
-
-                    
                 </Body>
             </Container>
         </Base>

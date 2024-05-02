@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
+import { Link } from 'react-router-dom';
 
 const Base = styled.div`
     width: 100%;
@@ -71,6 +72,28 @@ const Font_Button = styled.h1`
     margin: 0;
     text-align: left;
 `;
+const Font_Body = styled.h1`
+    font-size: 20px;
+    font-family: 'engLogo';
+    margin: 5;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    height: 100%; /* 부모 요소의 높이를 따라가도록 설정 */
+`;
+const Font_Body2 = styled.h1`
+    font-size: 20px;
+    font-family: 'Logo';
+    margin: 0; /* 기본 마진 제거 */
+    text-align: left;
+    line-height: 1.2; /* 줄간 간격 조절 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+`;
+
 
 const Body = styled.div`
     width: 100%; /* 최대 너비 설정 */
@@ -83,10 +106,22 @@ const StudyNote = () => {
                 <Title>
                     <Font_Title>학습 노트</Font_Title>
                 </Title>
-                <WhiteBox1 />
-                <Memo />
+                <WhiteBox1>
+                    <Font_Body>They plan to improve their writing skills soon.</Font_Body>
+                </WhiteBox1>
+                <Memo>
+                <Font_Body2>
+                    주어: They <br/>
+                    동사: plan <br/>
+                    목적어: to improve their writing skills soon <br/>
+                    여기서 "to improve"는 동사 "plan"의 목적으로 사용됐음.
+                    </Font_Body2>
+                </Memo>
+
                 <SaveBox>
-                    <Font_Button>학습종료</Font_Button>
+                    <Link to="/main">
+                        <Font_Button>학습종료</Font_Button>
+                    </Link>
                 </SaveBox>
             </Container>
         </Base>

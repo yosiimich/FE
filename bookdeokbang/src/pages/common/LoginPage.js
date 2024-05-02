@@ -14,15 +14,6 @@ import korfonts from '../../assets/fonts/BMHANNAAir_ttf.ttf';
 import engfonts from '../../assets/fonts/Schoolbell-Regular.ttf';
 import theme from '../../styles/commonTheme'
 
-const Page1 = styled.div`
-  width: 100%; /* 반응형으로 변경 */
-  height: 100vh; /* 반응형으로 변경 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${theme.colors.beige};
-  background-size: auto; 
-`;
 
 const Body1 = styled.div`
   width: 80%; /* 반응형으로 변경 */
@@ -62,21 +53,39 @@ const Text2 = styled.h1`
   margin: 0;
   text-align: right;
 `;
+const BackgroundContainer = styled.div`
+  background-image: url(${backgroundimg});
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+`;
+
+const Page1 = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${theme.colors.beige};
+`;
+
 const Login = () => {
   return (
-    <Page1>
-      <Body1>
-        <Title>
-          <Text> Gramary</Text>
-          <Title_Bottom>
-            <Text2>내 손 안의 영문법</Text2>
-          </Title_Bottom>
-          
-        </Title>  
-       
-      </Body1>
-    </Page1>
+    
+      <Page1>
+        <Body1>
+          <Title>
+            <Text> Gramary</Text>
+            <Title_Bottom>
+              <Text2>내 손 안의 영문법</Text2>
+              <backgroundimg></backgroundimg>
+            </Title_Bottom>
+
+          </Title>  
+        </Body1>
+      </Page1>
+  
   );
 };
-
 export default Login;

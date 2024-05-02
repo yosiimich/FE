@@ -11,6 +11,12 @@
     font-weight: 200;
     src:url("./BMHANNAAir_ttf.ttf");
 }
+@font-face{
+    font-family: "H2";
+    font-style: normal;
+    font-weight: 400;
+    src:url("./BMHANNAAir_ttf.ttf");
+}
 
 @font-face{
     font-family: "engLogo";
