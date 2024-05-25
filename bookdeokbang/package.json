@@ -6,22 +6,26 @@
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.3.0",
+    "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.3.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.2",
+    "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.0",
+    "http-proxy-middleware": "^3.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-hook-form": "^7.21.6",
+    "react-hook-form": "^7.51.5",
+    "react-icons": "^5.2.1",
     "react-native-webview": "^13.8.2",
-    "react-router-dom": "^6.0.0",
+    "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.0",
     "styled-components": "^5.3.3",
-    "sweetalert2": "^11.2.4",
+    "sweetalert2": "^11.11.0",
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --proxy setupProxy.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://34.22.93.189"
 }

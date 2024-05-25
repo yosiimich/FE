@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 import theme from '../../styles/commonTheme';
+import axios from "axios";
+import { useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 사용
 import SvgIcon from "@mui/material/SvgIcon";
-import { SvgIconComponent } from "@mui/icons-material";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ContactsIcon from '@mui/icons-material/ImportContacts';
-import ImageUploader from './ImageUploader';
 
 const Base = styled.div`
     width: 100%;
@@ -65,6 +65,12 @@ const GrayBox = styled.div`
     padding-left: 10px;
 `;
 
+const InstructionText = styled.h3`
+    font-size: 16px;
+    font-family: 'Logo';
+    margin: 0;
+`;
+
 const SmallWhiteBox = styled.div`
     width: 80px;
     height: 80px;
@@ -74,7 +80,18 @@ const SmallWhiteBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer; /* 마우스를 가져다 대면 커서 모양을 포인터로 변경 */
+    cursor: pointer;
+`;
+const SmallBlackBox = styled.div`
+    width: 80px;
+    height: 80px;
+    background-color: #000;
+    margin-right: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 `;
 
 const Menu = styled.div`
@@ -104,6 +121,12 @@ const Info = styled.h1`
     font-family: 'Logo';
     text-align: center;
 `;
+const Info2 = styled.h1`
+    font-size: 15px;
+    font-family: 'Logo';
+    text-align: center;
+
+`;
 
 const Voca = styled.h1`
     font-size: 24px;
@@ -113,46 +136,28 @@ const Voca = styled.h1`
 `;
 
 const MainPage = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [showUploader, setShowUploader] = useState(false);
-    const [image, setImage] = useState(null);
-    const videoRef = useRef(null);
+    const [selectedImageUrl, setSelectedImageUrl] = useState('');
+    const navigate = useNavigate(); 
 
     const handleGalleryImage = () => {
-        // 갤러리에서 이미지 가져오기
         const input = document.createElement('input');
+      
         input.type = 'file';
         input.accept = 'image/*';
         input.onchange = (e) => {
             const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                const imageDataURL = reader.result;
-                // 여기서 imageDataURL을 활용하여 원하는 동작 수행
-                // 예: 이미지를 미리 보여주기, 업로드하기 등
-                console.log('선택한 이미지 데이터 URL:', imageDataURL);
-                setShowUploader(true);
-            };
-            reader.readAsDataURL(file);
+            setSelectedImageUrl(URL.createObjectURL(file));
+            navigate(`/ocr?url=${selectedImageUrl}`);
         };
         input.click();
     };
     
-    const handleCameraImage = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            videoRef.current.srcObject = stream;
-            setShowModal(true);
-        } catch (error) {
-            console.error('Error accessing webcam:', error);
-        }
+
+    const handleContactsClick = () => {
+        navigate('/studynote');
     };
 
-
-    const handleModalOpen = () => {
-        setShowModal(true);
-    };
-
+   
     return (
         <Base>
             <Container>
@@ -179,28 +184,20 @@ const MainPage = () => {
                     <Info>보여주는 곳</Info>
                 </WhiteBox2>
                 <GrayBox>
-                    <SmallWhiteBox onClick={handleModalOpen}>
+                    
+                    <SmallWhiteBox onClick={handleGalleryImage}>
                         <SvgIcon component={CameraAltIcon} fontSize="large" />
                     </SmallWhiteBox>
+                    <Info2>모르는 영어 문장을 검색해보세요</Info2>
                 </GrayBox>
 
                 <GrayBox>
-                    <SmallWhiteBox>
+                    <SmallWhiteBox onClick={handleContactsClick}>
                         <SvgIcon component={ContactsIcon} fontSize="large" />
                     </SmallWhiteBox>
+                    <Info2>나만의 영어 문장을 기록해보세요</Info2>
                 </GrayBox>
             </Container>
-
-            {/* 모달 */}
-            {showModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', maxWidth: '400px', textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
-                    <button style={{ marginBottom: '10px' }} onClick={handleGalleryImage} >갤러리에서 가져오기</button>
-                    <button style={{ marginBottom: '10px' }} onClick={handleCameraImage}>사진 촬영하기</button>
-                </div>
-            </div>
-            
-            )}
         </Base>
     );
 }

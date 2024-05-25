@@ -1,6 +1,8 @@
-import React from 'react';
+import {React, useEffect} from 'react';
 import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
+import { TokenAxios } from '../../apis/CommonAxios';
+
 
 const Base = styled.div`
     width: 100%;
@@ -70,6 +72,31 @@ const Font_Content = styled.h1`
 
 
 const Info = () => {
+    const Infoshow= async (noticeId) => {
+        console.log(noticeId);
+        try{
+            const res = await TokenAxios.get(`http://34.22.93/v1/notices/${noticeId}`);
+            const data = res.result;
+            console.log(data);
+        }
+        catch(e) {
+
+        }
+    }
+    const Infoshowall= async (data) => {
+        console.log(data);
+        try{
+            const res = await TokenAxios.get(`http://34.22.93/v1/notices/all`);
+            const data = res.result;
+        }
+        catch(e) {
+
+        }
+    }
+    useEffect(()=>{
+        Infoshow("noticeId")
+         },[]);
+
     return (
     <Base>
         <Container>

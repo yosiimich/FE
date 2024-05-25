@@ -1,11 +1,11 @@
-import Button from '@mui/joy/Button';
+import { Button } from '@mui/material'; // 또는 from '@mui/material';
 import styled from 'styled-components';
 
-const Button_main = styled(Button)`
-    width: 80vw;
-    height: 10vh;
-    border-radius: 9px
+const StyledButton = styled(Button)`
+    width: 100%;
+    height: 10%;
+    border-radius: 50px;
+    font-size: 10px; /* 폰트 크기 조정 */
 `;
 
-
-export default Button_main;
+export default StyledButton;

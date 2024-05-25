@@ -87,13 +87,13 @@ const Similar = () => {
                 </Title>
                     
                 <WhiteBox1>
-                    <Font_Body>They plan to improve their writing skills soon.</Font_Body>
+                    <Font_Body>I finished reading the book.</Font_Body>
                 </WhiteBox1>
                 <WhiteBox1>
-                    <Font_Body>I want to improve my writing, speaking, and communication skills.</Font_Body>
+                    <Font_Body>She loves playing baseball with her family.</Font_Body>
                 </WhiteBox1>
                 <WhiteBox1>
-                    <Font_Body>I listen to English news every morning to practice English.</Font_Body>
+                    <Font_Body>I enjoy listening to music</Font_Body>
                 </WhiteBox1>
 
                 <Body>

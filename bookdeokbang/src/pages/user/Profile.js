@@ -33,7 +33,7 @@ const ProfileBox = styled.div`
     justify-content: center;
     align-items: center;
 `;
-const InputBox = styled.div`
+const InputBox = styled.input`
     width: 100%; /* 최대 너비 설정 */
     height: 50px; /* 고정 높이값 */
     background-color: #fff;
@@ -45,19 +45,22 @@ const InputBox = styled.div`
     align-items: center; /* 텍스트를 수직 정렬하기 위해 추가 */
     justify-content: center; /* 텍스트를 수평 정렬하기 위해 추가 */
     font-size: 16px; /* 고정된 글꼴 크기 설정 */
+    padding: 0 10px; /* 내부 패딩 추가 */
 `;
-const InputBox2 = styled.div`
-    width: 11%; /* 최대 너비 설정 */
-    height: 50px; /* 고정 높이값 */
-    background-color: #fff;
-    margin-bottom: 20px; /* 틈을 주기 위한 마진 */
-    border-radius: 8px; /* 둥근 모서리 추가 */
-    border: 1px solid ${theme.colors.black}; /* 테두리 추가 */
-    box-sizing: border-box; /* 테두리를 포함한 전체 크기를 유지하도록 설정 */
-    display: flex;
-    align-items: center; /* 텍스트를 수직 정렬하기 위해 추가 */
-    justify-content: center; /* 텍스트를 수평 정렬하기 위해 추가 */
-    font-size: 16px; /* 고정된 글꼴 크기 설정 */
+
+const Button = styled.button`
+    width: 100%;
+    height: 50px;
+    background-color: ${theme.colors.black};
+    color: ${theme.colors.white};
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: ${theme.colors.black};
+    }
 `;
 
 const Title=styled.div`
@@ -110,17 +113,16 @@ const Profile = () => {
             <Body>
             <Title>
                 <Font_Content>닉네임</Font_Content>
-                <InputBox></InputBox>
+                <InputBox type="text" /> {/* text type의 input 상자 */}
                 <Font_Content>상태 메세지</Font_Content>
-                <InputBox></InputBox>
+                <InputBox type="text" /> {/* text type의 input 상자 */}
             </Title>
             </Body>
             <Bottom>
-                <Font_Content>연동계정</Font_Content>
-                <InputBox2></InputBox2>
                 <Font_Content>이메일</Font_Content>
-                <InputBox></InputBox>
+                <InputBox type="email" /> {/* email type의 input 상자 */}
             </Bottom>
+            <Button>저장하기</Button> {/* 저장하기 버튼 */}
         </Container>
     </Base>
     );

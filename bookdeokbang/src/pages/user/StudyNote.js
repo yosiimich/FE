@@ -107,14 +107,11 @@ const StudyNote = () => {
                     <Font_Title>학습 노트</Font_Title>
                 </Title>
                 <WhiteBox1>
-                    <Font_Body>They plan to improve their writing skills soon.</Font_Body>
+                    <Font_Body>she enjoys playing baseball with friends.</Font_Body>
                 </WhiteBox1>
                 <Memo>
                 <Font_Body2>
-                    주어: They <br/>
-                    동사: plan <br/>
-                    목적어: to improve their writing skills soon <br/>
-                    여기서 "to improve"는 동사 "plan"의 목적으로 사용됐음.
+                 
                     </Font_Body2>
                 </Memo>
 

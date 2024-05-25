@@ -2,6 +2,22 @@ import React from 'react';
 import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
 
+// Button 컴포넌트를 styled-components로 정의합니다.
+const Button = styled.button`
+    width: 100%;
+    height: 50px;
+    background-color: ${theme.colors.black};
+    color: ${theme.colors.white};
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: ${theme.colors.black};
+    }
+`;
+
 const Base = styled.div`
     width: 100%;
     min-height: 100vh;
@@ -102,7 +118,7 @@ const Inquiry = () => {
             <ContentBox/> {/* 투명한 박스 */}
             <Bottom>
             <InputBox>
-                <Font_Content>저장하기</Font_Content>
+            <Button>저장하기</Button> {/* 저장하기 버튼 */}
             </InputBox>
         </Bottom>
         </Container>
