@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
+import { Link } from 'react-router-dom';
+import { TokenAxios } from "../../apis/CommonAxios";
+import { Button } from "@mui/material";
 
 const Base = styled.div`
     width: 100%;
@@ -33,6 +36,17 @@ const ContentBox = styled.div`
     border: 0.8px solid ${theme.colors.black}; /* 테두리 추가 */
 `;
 
+const CustomButton = styled(Button)`
+    background-color: #00000;
+    color: #000000;
+    &:hover {
+        background-color: #FFD465;
+    }
+    width: 150px;
+    height: 50px;
+    font-size: 18px;
+    align-self: center;
+`;
 
 
 const Title=styled.div`
@@ -66,15 +80,19 @@ const Font_Content = styled.h1`
     color:white;
 `;
 
-
 const Policy = () => {
     return (
     <Base>
         <Container>
-             <Title>
+            <Title>
                 <Font_Title>운영정책</Font_Title>
             </Title>
             <ContentBox/> 
+            <Link to="/main">
+                <CustomButton>
+                    돌아가기
+                </CustomButton>
+            </Link>
         </Container>
     </Base>
     );

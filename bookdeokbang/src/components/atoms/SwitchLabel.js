@@ -17,6 +17,10 @@ const StyledSwitch = styled(Switch)({
 const StyledFormControlLabel = styled(FormControlLabel)({
   display: "flex",
   justifyContent: "flex-end",
+  "& .MuiFormControlLabel-label": { // 라벨 스타일 설정
+    fontFamily: "logo", // 원하는 폰트 설정
+    fontSize: "10px", // 원하는 폰트 크기 설정
+  },
 });
 
 export default function StyledSwitchLabels({ isAdminMode, onModeChange }) {

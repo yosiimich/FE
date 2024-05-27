@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
-import axios from "axios";
 import { useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 사용
 import SvgIcon from "@mui/material/SvgIcon";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ContactsIcon from '@mui/icons-material/ImportContacts';
+import { Link } from 'react-router-dom';
+import { TokenAxios } from "../../apis/CommonAxios"; // TokenAxios 추가
 
 const Base = styled.div`
     width: 100%;
@@ -136,6 +137,8 @@ const Voca = styled.h1`
 `;
 
 const MainPage = () => {
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
     const [selectedImageUrl, setSelectedImageUrl] = useState('');
     const navigate = useNavigate(); 
 
@@ -156,16 +159,34 @@ const MainPage = () => {
     const handleContactsClick = () => {
         navigate('/studynote');
     };
+    const fetchWords = async () => {
+        try {
+            const response = await TokenAxios.get(`${API_BASE_URL}/v1/words/all`);
+            console.log(response.data.result); // API 응답 데이터 확인
+        } catch (error) {
+            console.error("Error fetching words:", error);
+        }
+    };
 
-   
+    fetchWords();
+
+    useEffect(() => {
+       
+    }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+
     return (
         <Base>
             <Container>
                 <Container_Head>
                     <Title>Gramary</Title>
                     <Menu>
-                        <MenuItem>마이페이지</MenuItem>
-                        <MenuItem>공지사항</MenuItem>
+                        <MenuItem>
+                        <Link to="/mypage">마이페이지</Link>
+                        </MenuItem>
+                        <MenuItem>
+                        <Link to="/info">공지사항</Link>
+                        </MenuItem>
+
                     </Menu>
                 </Container_Head>
 

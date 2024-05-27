@@ -1,7 +1,10 @@
 import {React, useEffect} from 'react';
-import styled from 'styled-components';
+import styled from "styled-components";
 import theme from '../../styles/commonTheme';
-import { TokenAxios } from '../../apis/CommonAxios';
+import { Link } from 'react-router-dom';
+import { TokenAxios } from "../../apis/CommonAxios";
+import { Button } from "@mui/material";
+
 
 
 const Base = styled.div`
@@ -37,6 +40,18 @@ const TitleBox = styled.div`
     align-items: center;
     border: 0.8px solid ${theme.colors.black}; /* 테두리 추가 */
 `;
+const CustomButton = styled(Button)`
+    background-color: #00000;
+    color: #000000;
+    &:hover {
+        background-color: #11111;
+    }
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    align-self: center;
+`;
+
 
 
 const Title=styled.div`
@@ -71,12 +86,13 @@ const Font_Content = styled.h1`
 `;
 
 
-const Info = () => {
+const Info = (noticeId) => {
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
     const Infoshow= async (noticeId) => {
         console.log(noticeId);
         try{
-            const res = await TokenAxios.get(`http://34.22.93/v1/notices/${noticeId}`);
-            const data = res.result;
+            const res = await TokenAxios.get(`${API_BASE_URL}/v1/notices/${noticeId}`);
+            const data = res.data.result;
             console.log(data);
         }
         catch(e) {
@@ -86,8 +102,8 @@ const Info = () => {
     const Infoshowall= async (data) => {
         console.log(data);
         try{
-            const res = await TokenAxios.get(`http://34.22.93/v1/notices/all`);
-            const data = res.result;
+            const res = await TokenAxios.get(`${API_BASE_URL}/v1/notices/all`);
+            const data = res.data.result;
         }
         catch(e) {
 
@@ -96,6 +112,9 @@ const Info = () => {
     useEffect(()=>{
         Infoshow("noticeId")
          },[]);
+    useEffect(()=>{
+        Infoshowall("data")
+        },[]);
 
     return (
     <Base>
@@ -124,7 +143,11 @@ const Info = () => {
             <TitleBox>
                 <Font_Content></Font_Content>
             </TitleBox>
-    
+            <Link to="/main">
+                <CustomButton>
+                    돌아가기
+                </CustomButton>
+            </Link>
         </Container>
     </Base>
     );

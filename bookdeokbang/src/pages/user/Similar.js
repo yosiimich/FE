@@ -1,8 +1,9 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
-import Button_main from "../../components/atoms/button";
 import { Link } from 'react-router-dom';
+import { TokenAxios } from '../../apis/CommonAxios';
+import { Button } from '@mui/material';
 
 const Base = styled.div`
     width: 100%;
@@ -14,43 +15,53 @@ const Base = styled.div`
 `;
 
 const Container = styled.div`
-    width: 100%; /* 변경 */
+    width: 100%;
     max-width: 1200px;
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* 변경 */
+    justify-content: center;
 `;
-
 
 const WhiteBox1 = styled.div`
     width: 100%;
-    height: 150px;
+    height: 120px;
     background-color: #fff;
     margin-bottom: 15px;
-    border-radius: 8px; /* 둥근 모서리 추가 */
-    border: 1px solid ${theme.colors.black}; /* 테두리 추가 */
-    box-sizing: border-box; /* 테두리를 포함한 전체 크기를 유지하도록 설정 */
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.black};
+    box-sizing: border-box;
 `;
 
 const SaveBox = styled.div`
-    width: 100%; /* 최대 너비 설정 */
-    height: 50px; /* 고정 높이값 */
+    width: 100%;
+    height: 50px;
     background-color: #fff;
-    margin-bottom: 15px;
-    border-radius: 10px; /* 둥근 모서리 추가 */
-    border: 1px solid ${theme.colors.black}; /* 테두리 추가 */
-    box-sizing: border-box; /* 테두리를 포함한 전체 크기를 유지하도록 설정 */
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid ${theme.colors.black};
+    box-sizing: border-box;
     display: flex;
-    align-items: center; /* 텍스트를 수직 정렬하기 위해 추가 */
-    justify-content: center; /* 텍스트를 수평 정렬하기 위해 추가 */
-    font-size: 16px; /* 고정된 글꼴 크기 설정 */
-
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
 `;
+
 const Title = styled.div`
     margin-bottom: 2vh;
 `;
 
+const CustomButton = styled(Button)`
+    background-color: #00000;
+    color: #000000;
+    &:hover {
+        background-color: #11111;
+    }
+    width: 150px;
+    height: 50px;
+    font-size: 15px;
+    align-self: center;
+`;
 
 const Font_Title = styled.h1`
     font-size: 20px;
@@ -58,27 +69,34 @@ const Font_Title = styled.h1`
     margin: 0;
     text-align: left;
 `;
-const Font_Button = styled.h1`
-    font-size: 15px;
-    font-family: 'Logo';
-    margin: 0;
-    text-align: left;
-`;
+
 const Font_Body = styled.h1`
     font-size: 20px;
     font-family: 'engLogo';
     margin: 5;
     text-align: center;
     display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
-    height: 100%; /* 부모 요소의 높이를 따라가도록 설정 */
-`;
-const Body = styled.div`
-    width: 100%; /* 최대 너비 설정 */
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 `;
 
-const Similar = () => {
+const Similar = (grammar, difficulty) => {
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+    const fetchData = async () => {
+        try {
+            const res = await TokenAxios.get(`${API_BASE_URL}/v1/sentences/${grammar}/${difficulty}/recommend`);
+            const data = res.data.result;
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching recommended sentences:', error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <Base>
             <Container>
@@ -87,32 +105,28 @@ const Similar = () => {
                 </Title>
                     
                 <WhiteBox1>
-                    <Font_Body>I finished reading the book.</Font_Body>
+                    <Font_Body></Font_Body>
                 </WhiteBox1>
                 <WhiteBox1>
-                    <Font_Body>She loves playing baseball with her family.</Font_Body>
+                    <Font_Body></Font_Body>
                 </WhiteBox1>
                 <WhiteBox1>
-                    <Font_Body>I enjoy listening to music</Font_Body>
+                    <Font_Body></Font_Body>
                 </WhiteBox1>
 
-                <Body>
-                    <SaveBox>
-                        <Link to="/studynote">
-                            <Font_Button>추천문장 저장하기</Font_Button>
-                        </Link>
-                    </SaveBox>
-                    <SaveBox>
-                        <Link to="/main">
-                            <Font_Button>학습 종료</Font_Button>
-                        </Link>
-                    </SaveBox>
-                </Body>
+                <SaveBox>
+                    <Link to="/studynote">
+                        <CustomButton>추천문장 저장하기</CustomButton>
+                    </Link>
+                </SaveBox>
+                <SaveBox>
+                    <Link to="/main">
+                        <CustomButton>학습 종료</CustomButton>
+                    </Link>
+                </SaveBox>
             </Container>
         </Base>
     );
 }
 
 export default Similar;
-
-

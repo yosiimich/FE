@@ -1,21 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
+import { Button } from "@mui/material";
+import { Link } from 'react-router-dom';
 
-// Button 컴포넌트를 styled-components로 정의합니다.
-const Button = styled.button`
-    width: 100%;
-    height: 50px;
-    background-color: ${theme.colors.black};
-    color: ${theme.colors.white};
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+
+const CustomButton = styled(Button)`
+    background-color: #00000;
+    color: #000000;
     &:hover {
-        background-color: ${theme.colors.black};
+        background-color: #11111;
     }
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    align-self: center;
 `;
 
 const Base = styled.div`
@@ -37,22 +36,26 @@ const Container = styled.div`
     justify-content: center; /* 수직 가운데 정렬 */
     align-items: center; /* 수평 가운데 정렬 */
 `;
-
-const TitleBox = styled.div`
+const Memo = styled.textarea`
     width: 100%;
-    height: 50px;
-    background-color: #F0F0F0;
-    margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 10px; /* 아래쪽 여백 */
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 0.8px solid ${theme.colors.black}; /* 테두리 추가 */
+    height: 480px;
+    background-color: #fff;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.black};
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+    resize: vertical;
+    &::placeholder { /* 힌트 텍스트 스타일링 */
+        color: #a9a9a9;
+    }
 `;
+
 const ContentBox = styled.div`
     width: 100%;
-    height: 400px;
+    height: 700px;
     background-color: #F0F0F0;
     margin-top: 10px; /* 위쪽 여백 */
     margin-bottom: 50px; /* 아래쪽 여백 */
@@ -85,7 +88,12 @@ const Body = styled.div`
 const Bottom=styled.div`
     height: 100px; /* 고정 높이값 */
     width: 100%; /* 최대 너비 설정 */
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    margin-top: -60px; /* 원하는 만큼 갭을 조절 */
 `;
+
 
 const Font_Title = styled.h1`
     font-size: 25px;
@@ -114,12 +122,17 @@ const Inquiry = () => {
             <Title>
                 <Font_Title>1:1 문의내역</Font_Title>
             </Title>
-            <TitleBox></TitleBox>
-            <ContentBox/> {/* 투명한 박스 */}
+            <Memo placeholder="문의내역을 입력하세요" />
+            
             <Bottom>
-            <InputBox>
-            <Button>저장하기</Button> {/* 저장하기 버튼 */}
-            </InputBox>
+          
+            <Link to="/main">
+                <CustomButton>
+                           저장하기
+                </CustomButton>
+            </Link>
+           
+         
         </Bottom>
         </Container>
     </Base>

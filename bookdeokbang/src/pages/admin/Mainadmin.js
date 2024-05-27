@@ -3,6 +3,12 @@ import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
+import Dropdown from '@mui/joy/Dropdown';
+import Table from '@mui/joy/Table';
+import { Link } from "react-router-dom"; 
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'; // 아이콘 추가
 import FolderCopyOutlinedIcon from '@mui/icons-material/FolderCopyOutlined'; // 두 번째 아이콘 추가
 import DeveloperBoardOutlinedIcon from '@mui/icons-material/DeveloperBoardOutlined'; // 세 번째 아이콘 추가

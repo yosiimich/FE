@@ -105,13 +105,12 @@ const SignUp = () => {
 
   const signUp = async (data) => {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  
 
     console.log(data);
     try {
       const res = await DefaultAxios.post(`${API_BASE_URL}/v1/auth/local/sign-up`, data);
       
-      if (res.data.message === "string") {
+      if (res.data.result === "_OK") {
         Swal.fire({
           icon: "success",
           title: "회원가입이 완료되었습니다.",
@@ -119,7 +118,7 @@ const SignUp = () => {
           confirmButtonColor: "black",
           confirmButtonText: "확인",
         }).then(() => {
-          navigate("/login");
+          navigate("/main"); // 회원가입 성공 시 로그인 페이지로 이동
         });
       }
     } catch (e) {
@@ -129,10 +128,11 @@ const SignUp = () => {
         showConfirmButton: true,
         confirmButtonColor: "gray",
         confirmButtonText: "확인",
-        footer: "등록된 회원이 아닙니다.",
+        footer: "이미 등록된 회원입니다.",
       });
     }
   };
+
 
   useEffect(() => {
     if (password && comfirmPassword && password !== comfirmPassword) {

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import theme from '../../styles/commonTheme';
+import { Link } from 'react-router-dom';
+import { TokenAxios } from "../../apis/CommonAxios";
+import { Button } from "@mui/material";
 
 const Base = styled.div`
     width: 100%;
@@ -21,7 +24,17 @@ const Container = styled.div`
     justify-content: center; /* 수직 가운데 정렬 */
     align-items: center; /* 수평 가운데 정렬 */
 `;
-
+const CustomButton = styled(Button)`
+    background-color: #00000;
+    color: #000000;
+    &:hover {
+        background-color: #FFD465;
+    }
+    width: 150px;
+    height: 50px;
+    font-size: 18px;
+    align-self: center;
+`;
 const ContentBox = styled.div`
     width: 100%;
     height: 450px;
@@ -75,6 +88,11 @@ const PersonalData = () => {
                 <Font_Title>개인정보 처리 방침</Font_Title>
             </Title>
             <ContentBox/> 
+            <Link to="/main">
+                <CustomButton>
+                    돌아가기
+                </CustomButton>
+            </Link>
         </Container>
     </Base>
     );

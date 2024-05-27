@@ -8,6 +8,7 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
+import { Link } from "react-router-dom"; 
 
 const PageContainer = styled.div`
     position: relative;
@@ -106,7 +107,10 @@ const Similaradmin = () => {
                     </tbody>
                 </StyledTable>
             </TableContainer>
-            <Gramary>Gramary</Gramary>
+            <Link to="/mainadmin">
+                <Gramary>Gramary</Gramary>
+            </Link>
+        
             <TopRightGroup>
                 <ButtonGroup
                     color="neutral"
@@ -115,56 +119,68 @@ const Similaradmin = () => {
                     spacing={0}
                     variant="soft"
                 >
-                    <Button>관리자 정보 수정</Button>
+                    <Link to="/modifyadmin">
+                        <Button>관리자 정보 수정</Button>
+                    </Link>
                     <Button>로그아웃</Button>
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
-                <Dropdown>
-                    <MenuButton
-                        variant="plain"
-                        color="neutral"
-                        size="lg">USER</MenuButton>
-                    <Menu
-                        variant="plain"
-                    >
-                        <MenuItem
-                            color="neutral">사용자 정보 관리</MenuItem>
-                    </Menu>
-                </Dropdown>
-                <Dropdown>
-                    <MenuButton
-                        variant="plain"
-                        color="neutral"
-                    >DATA</MenuButton>
-                    <Menu>
-                        <MenuItem
-                            color="neutral">검색 내역 데이터 관리</MenuItem>
-                        <MenuItem
-                            color="neutral">학습 노트 내역 관리</MenuItem>
-                        <MenuItem
-                            color="neutral">유사 문장 데이터 관리</MenuItem>
-                        <MenuItem
-                            color="neutral">저장된 문장 데이터 관리</MenuItem>
-                        <MenuItem
-                            color="neutral">단어 데이터 관리</MenuItem>
-                    </Menu>
-                </Dropdown>
-                <Dropdown>
-                    <MenuButton
-                        variant="plain"
-                        color="neutral"
-                        size="lg">AI</MenuButton>
-                    <Menu
-                        variant="plain"
-                    >
-                        <MenuItem
-                            color="neutral">모델 정보 및 관리</MenuItem>
-                    </Menu>
-                </Dropdown>
-            </DropdownGroup>
+    <Dropdown>
+        <MenuButton
+            variant="plain"
+            color="neutral"
+            size="lg">USER</MenuButton>
+        <Menu
+            variant="plain"
+        >
+            <Link to="/infoadmin">
+                <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
+            </Link>
+        </Menu>
+    </Dropdown>
+    <Dropdown>
+        <MenuButton
+            variant="plain"
+            color="neutral"
+        >DATA</MenuButton>
+        <Menu>
+            <Link to="/searchadmin">
+                <MenuItem color="neutral">검색 내역 데이터 관리</MenuItem> 
+            </Link>
+            <Link to="/studynoteadmin">
+                <MenuItem color="neutral">학습 노트 내역 관리</MenuItem> 
+            </Link>
+            <Link to="/similaradmin">
+                <MenuItem color="neutral">유사 문장 데이터 관리</MenuItem> 
+            </Link>
+            <Link to="/saveadmin">
+                <MenuItem color="neutral">저장된 문장 데이터 관리</MenuItem> 
+            </Link>
+            <Link to="/wordadmin">
+                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+            </Link>
+        </Menu>
+    </Dropdown>
+    <Dropdown>
+        <MenuButton
+            variant="plain"
+            color="neutral"
+            size="lg">AI
+        </MenuButton>
+        <Menu
+            variant="plain"
+        >
+            <Link to="/aiadmin">
+                <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
+            </Link>
+        </Menu>
+    </Dropdown>
+</DropdownGroup>
+
         </PageContainer>
     );
+
 }
 
 export default Similaradmin;
