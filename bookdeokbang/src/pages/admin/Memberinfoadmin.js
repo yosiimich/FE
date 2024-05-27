@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -9,6 +9,9 @@ import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
 import { Link } from "react-router-dom"; 
+import Swal from 'sweetalert2';
+import { TokenAxios } from "../../apis/CommonAxios";
+
 
 const PageContainer = styled.div`
     position: relative;
@@ -60,36 +63,101 @@ const StyledTable = styled(Table)`
 const StyledTableCell = styled.td`
     padding: 8px;
     border: 1px solid #dddddd;
-    text-align: left;
+    text-align: center; /* 가운데 정렬 */
     font-size: 14px;
 `;
 
-function createData(등록날짜, 문장내역, 분석정보) {
-    return { 등록날짜, 문장내역, 분석정보 };
+const SearchContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+`;
+
+const SearchInput = styled.input`
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+`;
+
+const SearchButton = styled(Button)`
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: ${theme.colors.primary};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+`;
+
+function createData(No, name, ID) {
+    return { No, name, ID };
 }
 
-const rows = [
-    createData(1, 'A', 'A123'),
-    createData(2, 'B', 'B456'),
-    createData(3, 'C', 'C789'),
+const initialRows = [
+    createData(1, '김가천', 'A123'),
+    createData(2, '이철수', 'B456'),
+    createData(3, '박영희', 'C789'),
 ];
 
-const handleNameClick = (ID) => {
-    // 사용자에 대한 작업 수행
-    console.log(`Clicked user ID: ${ID}`);
-    // 예시: 사용자 프로필 표시 또는 수정
-};
+const Memberinfoadmin = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [rows, setRows] = useState(initialRows);
 
-const Similaradmin = () => {
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearch = () => {
+        const filteredRows = initialRows.filter(row =>
+            row.name.includes(searchTerm)
+        );
+        setRows(filteredRows);
+    };
+
+    const handleWithdraw = (ID) => {
+        // 사용자 탈퇴 작업 수행
+        Swal.fire({
+            title: "정말 탈퇴하시겠습니까?",
+            text: "탈퇴 후에는 복구할 수 없습니다.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(`Withdraw confirmed for user ID: ${ID}`);
+                // 탈퇴 작업 수행
+            } else {
+                console.log(`Withdraw canceled for user ID: ${ID}`);
+                // 탈퇴 취소
+            }
+        });
+    };
+
     return (
         <PageContainer>
+            <SearchContainer>
+                <SearchInput 
+                    type="text" 
+                    placeholder="회원명을 입력하세요" 
+                    value={searchTerm} 
+                    onChange={handleInputChange} 
+                />
+                <Button onClick={handleSearch}>검색</Button>
+            </SearchContainer>
             <TableContainer>
                 <StyledTable>
                     <thead>
                         <tr>
-                            <StyledTableCell>등록 날짜</StyledTableCell>
-                            <StyledTableCell>문장 내역</StyledTableCell>
-                            <StyledTableCell>분석 정보</StyledTableCell>
+                            <StyledTableCell>No</StyledTableCell>
+                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell>ID</StyledTableCell>
+                            <StyledTableCell>Withdraw</StyledTableCell> {/* 새로운 열 */}
                         </tr>
                     </thead>
                     <tbody>
@@ -97,11 +165,14 @@ const Similaradmin = () => {
                             <tr key={index}>
                                 <StyledTableCell>{row.No}</StyledTableCell>
                                 <StyledTableCell>
-                                    <a href="#" onClick={() => handleNameClick(row.ID)}>
+                                    <Link to={`/memberadmin?userID=${row.ID}`}>
                                         {row.name}
-                                    </a>
+                                    </Link>
                                 </StyledTableCell>
                                 <StyledTableCell>{row.ID}</StyledTableCell>
+                                <StyledTableCell>
+                                    <Button onClick={() => handleWithdraw(row.ID)}>탈퇴</Button>
+                                </StyledTableCell>
                             </tr>
                         ))}
                     </tbody>
@@ -119,10 +190,12 @@ const Similaradmin = () => {
                     spacing={0}
                     variant="soft"
                 >
-                    <Link to="/modifyadmin">
+                     <Link to="/modifyadmin">
                         <Button>관리자 정보 수정</Button>
                     </Link>
-                    <Button>로그아웃</Button>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
@@ -134,7 +207,7 @@ const Similaradmin = () => {
         <Menu
             variant="plain"
         >
-            <Link to="/infoadmin">
+            <Link to="/memberinfoadmin">
                 <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
             </Link>
         </Menu>
@@ -145,20 +218,17 @@ const Similaradmin = () => {
             color="neutral"
         >DATA</MenuButton>
         <Menu>
-            <Link to="/searchadmin">
-                <MenuItem color="neutral">검색 내역 데이터 관리</MenuItem> 
-            </Link>
-            <Link to="/studynoteadmin">
-                <MenuItem color="neutral">학습 노트 내역 관리</MenuItem> 
-            </Link>
-            <Link to="/similaradmin">
-                <MenuItem color="neutral">유사 문장 데이터 관리</MenuItem> 
+            <Link to="/askadmin">
+                <MenuItem color="neutral">문의 관리</MenuItem> 
             </Link>
             <Link to="/saveadmin">
-                <MenuItem color="neutral">저장된 문장 데이터 관리</MenuItem> 
+                <MenuItem color="neutral">문장 관리</MenuItem> 
             </Link>
             <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                <MenuItem color="neutral">단어 관리</MenuItem>
+            </Link>
+            <Link to="/infoadmin">
+                <MenuItem color="neutral">공지사항 관리</MenuItem>
             </Link>
         </Menu>
     </Dropdown>
@@ -177,10 +247,8 @@ const Similaradmin = () => {
         </Menu>
     </Dropdown>
 </DropdownGroup>
-
         </PageContainer>
     );
-
 }
 
-export default Similaradmin;
+export default Memberinfoadmin;

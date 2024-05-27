@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -8,7 +8,12 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { TokenAxios } from "../../apis/CommonAxios";
+
+const MySwal = withReactContent(Swal);
 
 const PageContainer = styled.div`
     position: relative;
@@ -64,23 +69,99 @@ const StyledTableCell = styled.td`
     font-size: 14px;
 `;
 
-function createData(No, name, ID) {
-    return { No, name, ID };
+const SearchContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+`;
+
+const SearchInput = styled.input`
+    padding: 10px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+`;
+
+const SearchButton = styled(Button)`
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: ${theme.colors.primary};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+`;
+
+function createData(date, title, content, author) {
+    return { date, title, content, author };
 }
 
-const rows = [
- 
+const initialRows = [
+    createData('2024-05-01', '문의 제목 1', '문의 내용 1', '작성자 1'),
+    createData('2024-05-02', '문의 제목 2', '문의 내용 2', '작성자 2'),
+    createData('2024-05-03', '문의 제목 3', '문의 내용 3', '작성자 3'),
 ];
 
-const handleNameClick = (ID) => {
-    // 사용자에 대한 작업 수행
-    console.log(`Clicked user ID: ${ID}`);
-    // 예시: 사용자 프로필 표시 또는 수정
-};
-
 const Askadmin = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [rows, setRows] = useState(initialRows);
+
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearch = () => {
+        const filteredRows = initialRows.filter(row =>
+            row.title.includes(searchTerm) || row.author.includes(searchTerm)
+        );
+        setRows(filteredRows);
+    };
+
+    const handleNameClick = (content) => {
+        Swal.fire({
+            icon: "info",
+            title: "문의 내용",
+            text: content,
+            showCancelButton: true,
+            confirmButtonColor: "black",
+            confirmButtonText: "확인",
+            cancelButtonText: "답변달기",
+            preConfirm: () => {
+         
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.cancel) {
+    
+                Swal.fire({
+                    title: '답변을 입력하세요',
+                    input: 'textarea',
+                    inputPlaceholder: '답변을 입력하세요',
+                    showCancelButton: true,
+                    confirmButtonText: '제출',
+                    cancelButtonText: '취소',
+                    preConfirm: (reply) => {
+                    
+                        console.log(`Reply submitted: ${reply}`);
+                        
+                    }
+                });
+            }
+        });
+    };
+
     return (
         <PageContainer>
+            <SearchContainer>
+                <SearchInput 
+                    type="text" 
+                    placeholder="문의 제목 또는 작성자를 입력하세요" 
+                    value={searchTerm} 
+                    onChange={handleInputChange} 
+                />
+                <Button onClick={handleSearch}>검색</Button>
+            </SearchContainer>
             <TableContainer>
                 <StyledTable>
                     <thead>
@@ -88,14 +169,20 @@ const Askadmin = () => {
                             <StyledTableCell>문의 날짜</StyledTableCell>
                             <StyledTableCell>문의 제목</StyledTableCell>
                             <StyledTableCell>문의 내용</StyledTableCell>
+                            <StyledTableCell>작성자</StyledTableCell>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.map((row, index) => (
                             <tr key={index}>
-                                <StyledTableCell>{row.No}</StyledTableCell>
-                                <StyledTableCell>{row.name}</StyledTableCell>
-                                <StyledTableCell>{row.ID}</StyledTableCell>
+                                <StyledTableCell>{row.date}</StyledTableCell>
+                                <StyledTableCell>
+                                    <a href="#" onClick={() => handleNameClick(row.content)}>
+                                        {row.title}
+                                    </a>
+                                </StyledTableCell>
+                                <StyledTableCell>{row.content}</StyledTableCell>
+                                <StyledTableCell>{row.author}</StyledTableCell>
                             </tr>
                         ))}
                     </tbody>
@@ -104,7 +191,7 @@ const Askadmin = () => {
             <Link to="/mainadmin">
                 <Gramary>Gramary</Gramary>
             </Link>
-        
+
             <TopRightGroup>
                 <ButtonGroup
                     color="neutral"
@@ -113,10 +200,12 @@ const Askadmin = () => {
                     spacing={0}
                     variant="soft"
                 >
-                    <Link to="/modifyadmin">
+                     <Link to="/modifyadmin">
                         <Button>관리자 정보 수정</Button>
                     </Link>
-                    <Button>로그아웃</Button>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
@@ -128,7 +217,7 @@ const Askadmin = () => {
         <Menu
             variant="plain"
         >
-            <Link to="/infoadmin">
+            <Link to="/memberinfoadmin">
                 <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
             </Link>
         </Menu>
@@ -139,20 +228,17 @@ const Askadmin = () => {
             color="neutral"
         >DATA</MenuButton>
         <Menu>
-            <Link to="/searchadmin">
-                <MenuItem color="neutral">검색 내역 데이터 관리</MenuItem> 
-            </Link>
-            <Link to="/studynoteadmin">
-                <MenuItem color="neutral">학습 노트 내역 관리</MenuItem> 
-            </Link>
-            <Link to="/similaradmin">
-                <MenuItem color="neutral">유사 문장 데이터 관리</MenuItem> 
+            <Link to="/askadmin">
+                <MenuItem color="neutral">문의 관리</MenuItem> 
             </Link>
             <Link to="/saveadmin">
-                <MenuItem color="neutral">저장된 문장 데이터 관리</MenuItem> 
+                <MenuItem color="neutral">문장 관리</MenuItem> 
             </Link>
             <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                <MenuItem color="neutral">단어 관리</MenuItem>
+            </Link>
+            <Link to="/infoadmin">
+                <MenuItem color="neutral">공지사항 관리</MenuItem>
             </Link>
         </Menu>
     </Dropdown>
@@ -171,10 +257,8 @@ const Askadmin = () => {
         </Menu>
     </Dropdown>
 </DropdownGroup>
-
-        </PageContainer>
+      </PageContainer>
     );
 }
-
 
 export default Askadmin;

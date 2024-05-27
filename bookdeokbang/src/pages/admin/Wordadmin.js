@@ -116,10 +116,12 @@ const Wordadmin = () => {
                     spacing={0}
                     variant="soft"
                 >
-                    <Link to="/modifyadmin">
+                     <Link to="/modifyadmin">
                         <Button>관리자 정보 수정</Button>
                     </Link>
-                    <Button>로그아웃</Button>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
@@ -131,7 +133,7 @@ const Wordadmin = () => {
         <Menu
             variant="plain"
         >
-            <Link to="/infoadmin">
+            <Link to="/memberinfoadmin">
                 <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
             </Link>
         </Menu>
@@ -142,20 +144,17 @@ const Wordadmin = () => {
             color="neutral"
         >DATA</MenuButton>
         <Menu>
-            <Link to="/searchadmin">
-                <MenuItem color="neutral">검색 내역 데이터 관리</MenuItem> 
-            </Link>
-            <Link to="/studynoteadmin">
-                <MenuItem color="neutral">학습 노트 내역 관리</MenuItem> 
-            </Link>
-            <Link to="/similaradmin">
-                <MenuItem color="neutral">유사 문장 데이터 관리</MenuItem> 
+            <Link to="/askadmin">
+                <MenuItem color="neutral">문의 관리</MenuItem> 
             </Link>
             <Link to="/saveadmin">
-                <MenuItem color="neutral">저장된 문장 데이터 관리</MenuItem> 
+                <MenuItem color="neutral">문장 관리</MenuItem> 
             </Link>
             <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                <MenuItem color="neutral">단어 관리</MenuItem>
+            </Link>
+            <Link to="/infoadmin">
+                <MenuItem color="neutral">공지사항 관리</MenuItem>
             </Link>
         </Menu>
     </Dropdown>

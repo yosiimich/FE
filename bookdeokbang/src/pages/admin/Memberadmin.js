@@ -9,6 +9,8 @@ import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
 import { Link } from "react-router-dom"; 
+import Swal from 'sweetalert2';
+import { TokenAxios } from "../../apis/CommonAxios";
 
 const PageContainer = styled.div`
     position: relative;
@@ -58,7 +60,6 @@ const StyledTable = styled(Table)`
 `;
 
 const StyledTableCell = styled.td`
-
     padding: 8px;
     border: 1px solid #dddddd;
     text-align: left;
@@ -75,13 +76,9 @@ const rows = [
     createData('회원 이름', ''),
     createData('닉네임', ''),
     createData('회원 이메일', ''),
-    createData('생년월일', ''),
-    createData('문의 내역', '문의 내역 바로가기'),
-    createData('검색 내역', '검색 내역 바로가기'),
-    createData('저장 내역', '저장 내역 바로가기'),
-    createData('학습 노트', '학습 노트 바로가기'),
+    createData('직업', ''),
+    createData('문의 내역','문의 내역 바로가기'),
 ];
-
 
 const handleNameClick = (ID) => {
     // 사용자에 대한 작업 수행
@@ -89,9 +86,19 @@ const handleNameClick = (ID) => {
     // 예시: 사용자 프로필 표시 또는 수정
 };
 
-const handleShortcutClick = (category) => {
-    console.log(`Clicked ${category} 바로가기`);
-    // 예시: 해당 카테고리에 대한 작업 수행
+const handleShortcutClick = (row) => {
+    // 문의 내역 보기
+    Swal.fire({
+        title: '문의 내용',
+        html: '<p></p>',
+        confirmButtonText: '확인',
+        customClass: {
+            popup: 'custom-popup-class',
+            content: 'custom-content-class',
+        },
+        width: '900px',
+        heightAuto: false,
+    });
 };
 
 const handleDeleteClick = () => {
@@ -111,9 +118,11 @@ const Memberadmin= () => {
                             <tr key={index}>
                                 <StyledTableCell>{row[0]}</StyledTableCell>
                                 <StyledTableCell>
-                                    <a href="#" onClick={() => handleNameClick(row[1])}>
-                                        {row[1]}
-                                    </a>
+                                    {row[0] === '문의 내역' && (
+                                        <Button onClick={() => handleShortcutClick(row)}>
+                                            {row[0]}
+                                        </Button>
+                                    )}
                                 </StyledTableCell>
                             </tr>
                         ))}
@@ -135,7 +144,9 @@ const Memberadmin= () => {
                     <Link to="/modifyadmin">
                         <Button>관리자 정보 수정</Button>
                     </Link>
-                    <Button>로그아웃</Button>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
@@ -147,7 +158,7 @@ const Memberadmin= () => {
         <Menu
             variant="plain"
         >
-            <Link to="/infoadmin">
+            <Link to="/memberinfoadmin">
                 <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
             </Link>
         </Menu>
@@ -158,20 +169,17 @@ const Memberadmin= () => {
             color="neutral"
         >DATA</MenuButton>
         <Menu>
-            <Link to="/searchadmin">
-                <MenuItem color="neutral">검색 내역 데이터 관리</MenuItem> 
-            </Link>
-            <Link to="/studynoteadmin">
-                <MenuItem color="neutral">학습 노트 내역 관리</MenuItem> 
-            </Link>
-            <Link to="/similaradmin">
-                <MenuItem color="neutral">유사 문장 데이터 관리</MenuItem> 
+            <Link to="/askadmin">
+                <MenuItem color="neutral">문의 관리</MenuItem> 
             </Link>
             <Link to="/saveadmin">
-                <MenuItem color="neutral">저장된 문장 데이터 관리</MenuItem> 
+                <MenuItem color="neutral">문장 관리</MenuItem> 
             </Link>
             <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                <MenuItem color="neutral">단어 관리</MenuItem>
+            </Link>
+            <Link to="/infoadmin">
+                <MenuItem color="neutral">공지사항 관리</MenuItem>
             </Link>
         </Menu>
     </Dropdown>
@@ -190,7 +198,7 @@ const Memberadmin= () => {
         </Menu>
     </Dropdown>
 </DropdownGroup>
-
+            <Button onClick={() => window.history.back()}>돌아가기</Button>
         </PageContainer>
     );
 }

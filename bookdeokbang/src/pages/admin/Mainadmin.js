@@ -9,6 +9,7 @@ import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
 import { Link } from "react-router-dom"; 
+import { TokenAxios } from "../../apis/CommonAxios";
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'; // 아이콘 추가
 import FolderCopyOutlinedIcon from '@mui/icons-material/FolderCopyOutlined'; // 두 번째 아이콘 추가
 import DeveloperBoardOutlinedIcon from '@mui/icons-material/DeveloperBoardOutlined'; // 세 번째 아이콘 추가
@@ -65,13 +66,20 @@ const StyledButton = styled(Button)`
     align-items: center; /* 내용을 수평 가운데 정렬 */
     font-family: Logo;
 `;
+const NavigationButton = ({ to, icon, label }) => (
+    <Link to={to}>
+        <StyledButton>
+            <IconWrapper>{icon}</IconWrapper>
+            {label}
+        </StyledButton>
+    </Link>
+);
 
 const IconWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
 `;
-
 const Mainadmin = () => {
     return (
         <PageContainer>
@@ -83,15 +91,8 @@ const Mainadmin = () => {
                     aria-label="Basic button group"
                     orientation="vertical"
                 >
-                    <StyledButton>
-                        <IconWrapper>
-                            <ManageAccountsOutlinedIcon />
-                        </IconWrapper>
-                        USER
-                    </StyledButton>
-                    <StyledButton>
-                        사용자 정보 관리
-                    </StyledButton>
+                    <NavigationButton icon={<ManageAccountsOutlinedIcon />} label="USER" />
+                    <NavigationButton to="/memberinfoadmin" label="사용자 정보 관리" />
                 </StyledButtonGroup>
 
                 {/* 두 번째 표 */}
@@ -100,28 +101,11 @@ const Mainadmin = () => {
                     aria-label="Basic button group"
                     orientation="vertical"
                 >
-                    <StyledButton>
-                        <IconWrapper>
-                            <FolderCopyOutlinedIcon />
-                        </IconWrapper>
-                        DATA
-                    </StyledButton>
-                    <StyledButton>
-                    
-                        검색 내역 데이터 관리
-                    </StyledButton>
-                    <StyledButton>
-                        학습 노트 내역 관리
-                    </StyledButton>
-                    <StyledButton>
-                          유사 문장 데이터 관리
-                    </StyledButton>
-                    <StyledButton>
-                        저장된 문장 데이터 관리
-                    </StyledButton>
-                    <StyledButton>
-                        단어 데이터 관리
-                    </StyledButton>
+                    <NavigationButton icon={<FolderCopyOutlinedIcon />} label="DATA" />
+                    <NavigationButton to="/askadmin" label="문의 관리" />
+                    <NavigationButton to="/saveadmin" label="문장 관리" />
+                    <NavigationButton to="/wordadmin" label="단어 관리" />
+                    <NavigationButton to="/infoadmin" label="공지사항 관리" />
                 </StyledButtonGroup>
 
                 {/* 세 번째 표 */}
@@ -130,15 +114,8 @@ const Mainadmin = () => {
                     aria-label="Basic button group"
                     orientation="vertical"
                 >
-                    <StyledButton>
-                        <IconWrapper>
-                            <DeveloperBoardOutlinedIcon />
-                        </IconWrapper>
-                        AI
-                    </StyledButton>
-                    <StyledButton>
-                        모델 정보 및 관리
-                    </StyledButton>
+                    <NavigationButton icon={<DeveloperBoardOutlinedIcon />} label="AI" />
+                    <NavigationButton to="/aiadmin" label="모델 정보 및 관리" />
                 </StyledButtonGroup>
             </CenterGroup>
 
@@ -150,12 +127,15 @@ const Mainadmin = () => {
                     spacing={0}
                     variant="soft"
                 >
-                    <Button>관리자 정보 수정</Button>
-                    <Button>로그아웃</Button>
+                    <Link to="/modifyadmin">
+                        <Button>관리자 정보 수정</Button>
+                    </Link>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
                 </ButtonGroup>
             </TopRightGroup>
         </PageContainer>
     );
 }
-
 export default Mainadmin;
