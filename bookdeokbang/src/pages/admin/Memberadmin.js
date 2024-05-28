@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -8,7 +8,7 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { TokenAxios } from "../../apis/CommonAxios";
 
@@ -16,7 +16,7 @@ const PageContainer = styled.div`
     position: relative;
     width: 100%;
     min-height: 100vh;
-    display: flex;      
+    display: flex;
     background-color: ${theme.colors.beige};
     justify-content: center;
     align-items: center;
@@ -66,62 +66,72 @@ const StyledTableCell = styled.td`
     font-size: 14px;
 `;
 
-function createData(...data) {
-    return data;
+function createData(label, value) {
+    return { label, value };
 }
 
-const rows = [
-    createData('회원 No', ''),
-    createData('ID', ''),
-    createData('회원 이름', ''),
-    createData('닉네임', ''),
-    createData('회원 이메일', ''),
-    createData('직업', ''),
-    createData('문의 내역','문의 내역 바로가기'),
-];
+const Memberadmin = () => {
+    const [memberInfo, setMemberInfo] = useState([
+        createData('회원 이름', ''),
+        createData('닉네임', ''),
+        createData('ID', ''),
+        createData('회원 이메일', ''),
+        createData('직업', ''),
+        createData('문의 내역', '문의 내역 바로가기')
+    ]);
 
-const handleNameClick = (ID) => {
-    // 사용자에 대한 작업 수행
-    console.log(`Clicked user ID: ${ID}`);
-    // 예시: 사용자 프로필 표시 또는 수정
-};
+    const handleChange = (index, newValue) => {
+        setMemberInfo(prevState => {
+            const updatedMemberInfo = [...prevState];
+            updatedMemberInfo[index].value = newValue;
+            return updatedMemberInfo;
+        });
+    };
 
-const handleShortcutClick = (row) => {
-    // 문의 내역 보기
-    Swal.fire({
-        title: '문의 내용',
-        html: '<p></p>',
-        confirmButtonText: '확인',
-        customClass: {
-            popup: 'custom-popup-class',
-            content: 'custom-content-class',
-        },
-        width: '900px',
-        heightAuto: false,
-    });
-};
+    const handleSaveClick = () => {
+        // 저장하기 버튼 클릭 시 실행될 작업
+        Swal.fire({
+            title: '저장되었습니다!',
+            icon: 'success',
+            confirmButtonText: '확인',
+        });
+    };
 
-const handleDeleteClick = () => {
-    console.log('삭제하기 버튼이 클릭되었습니다.');
-    // 예시: 특정 동작 실행
-};
+    const handleShortcutClick = (row) => {
+        // 문의 내역 보기
+        Swal.fire({
+            title: '문의 내용',
+            html: '<p></p>',
+            confirmButtonText: '확인',
+            customClass: {
+                popup: 'custom-popup-class',
+                content: 'custom-content-class',
+            },
+            width: '900px',
+            heightAuto: false,
+        });
+    };
+    
 
-const Memberadmin= () => {
     return (
         <PageContainer>
             <TableContainer>
                 <StyledTable>
-                    <thead>
-                    </thead>
                     <tbody>
-                        {rows.map((row, index) => (
+                        {memberInfo.map((row, index) => (
                             <tr key={index}>
-                                <StyledTableCell>{row[0]}</StyledTableCell>
+                                <StyledTableCell>{row.label}</StyledTableCell>
                                 <StyledTableCell>
-                                    {row[0] === '문의 내역' && (
+                                    {row.label === '문의 내역' ? (
                                         <Button onClick={() => handleShortcutClick(row)}>
-                                            {row[0]}
+                                            {row.value}
                                         </Button>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            value={row.value}
+                                            onChange={e => handleChange(index, e.target.value)}
+                                        />
                                     )}
                                 </StyledTableCell>
                             </tr>
@@ -132,7 +142,7 @@ const Memberadmin= () => {
             <Link to="/mainadmin">
                 <Gramary>Gramary</Gramary>
             </Link>
-        
+
             <TopRightGroup>
                 <ButtonGroup
                     color="neutral"
@@ -150,57 +160,58 @@ const Memberadmin= () => {
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">USER</MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/memberinfoadmin">
-                <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
-            </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-        >DATA</MenuButton>
-        <Menu>
-            <Link to="/askadmin">
-                <MenuItem color="neutral">문의 관리</MenuItem> 
-            </Link>
-            <Link to="/saveadmin">
-                <MenuItem color="neutral">문장 관리</MenuItem> 
-            </Link>
-            <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 관리</MenuItem>
-            </Link>
-            <Link to="/infoadmin">
-                <MenuItem color="neutral">공지사항 관리</MenuItem>
-            </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">AI
-        </MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/aiadmin">
-                <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
-            </Link>
-        </Menu>
-    </Dropdown>
-</DropdownGroup>
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                        size="lg">USER</MenuButton>
+                    <Menu
+                        variant="plain"
+                    >
+                        <Link to="/memberinfoadmin">
+                            <MenuItem color="neutral">사용자 정보 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                    >DATA</MenuButton>
+                    <Menu>
+                        <Link to="/askadmin">
+                            <MenuItem color="neutral">문의 관리</MenuItem>
+                        </Link>
+                        <Link to="/saveadmin">
+                            <MenuItem color="neutral">문장 관리</MenuItem>
+                        </Link>
+                        <Link to="/wordadmin">
+                            <MenuItem color="neutral">단어 관리</MenuItem>
+                        </Link>
+                        <Link to="/infoadmin">
+                            <MenuItem color="neutral">공지사항 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                        size="lg">AI
+                    </MenuButton>
+                    <Menu
+                        variant="plain"
+                    >
+                        <Link to="/aiadmin">
+                            <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+            </DropdownGroup>
+            <Button onClick={handleSaveClick}>저장하기</Button>
             <Button onClick={() => window.history.back()}>돌아가기</Button>
         </PageContainer>
     );
-}
+};
 
 export default Memberadmin;

@@ -9,6 +9,7 @@ import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
 import { Link } from "react-router-dom"; 
+import Swal from 'sweetalert2';
 import { TokenAxios } from "../../apis/CommonAxios";
 
 const PageContainer = styled.div`
@@ -47,6 +48,17 @@ const DropdownGroup = styled.div`
     margin-top: 10px; /* 각 Dropdown 사이의 간격을 조절합니다. */
 `;
 
+const AddWordButton = styled(Button)`
+    padding: 10px 20px;
+    font-family: logo;
+    font-size: 16px;
+    background-color: ${theme.colors.primary};
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+`;
+
+
 const TableContainer = styled.div`
     width: 80%;
     margin: 20px;
@@ -84,8 +96,39 @@ const Wordadmin = () => {
         fetchData();
     }, []);
 
+    const handleAddWord = () => {
+        Swal.fire({
+            title: '단어 등록',
+            html:
+                `<input id="name" class="swal2-input" placeholder="단어"/>
+                 <input id="meaning" class="swal2-input" placeholder="의미"></input>`,
+            showCancelButton: true,
+            confirmButtonText: '등록',
+            cancelButtonText: '취소',
+            preConfirm: () => {
+                const name = document.getElementById('name').value;
+                const meaning = document.getElementById('meaning').value;
+                if (!name || !meaning) {
+                    Swal.showValidationMessage('단어와 의미를 모두 입력해주세요.');
+                }
+                return { name, meaning };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const { name, meaning } = result.value;
+                // 여기에 단어 등록하는 API 호출하는 코드 작성
+                console.log("단어:", name, "의미:", meaning);
+                // 성공적으로 등록되었을 때 처리할 내용 추가
+                Swal.fire("단어가 등록되었습니다!", "", "success");
+            } else {
+                Swal.fire("단어 등록이 취소되었습니다.", "", "error");
+            }
+        });
+    };
+
     return (
         <PageContainer>
+            <Button onClick={handleAddWord} as={AddWordButton}>단어 등록하기</Button>
             <TableContainer>
                 <StyledTable>
                     <thead>
@@ -125,56 +168,43 @@ const Wordadmin = () => {
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">USER</MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/memberinfoadmin">
-                <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
-            </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-        >DATA</MenuButton>
-        <Menu>
-            <Link to="/askadmin">
-                <MenuItem color="neutral">문의 관리</MenuItem> 
-            </Link>
-            <Link to="/saveadmin">
-                <MenuItem color="neutral">문장 관리</MenuItem> 
-            </Link>
-            <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 관리</MenuItem>
-            </Link>
-            <Link to="/infoadmin">
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral" size="lg">USER</MenuButton>
+                    <Menu variant="plain">
+                        <Link to="/memberinfoadmin">
+                            <MenuItem color="neutral">사용자 정보 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral">DATA</MenuButton>
+                    <Menu>
+                        <Link to="/askadmin">
+                            <MenuItem color="neutral">문의 내역 관리</MenuItem>
+                        </Link>
+                        <Link to="/saveadmin">
+                            <MenuItem color="neutral">문장 데이터 관리</MenuItem>
+                        </Link>
+                        <Link to="/wordadmin">
+                            <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                        </Link>
+                        <Link to="/infoadmin">
                 <MenuItem color="neutral">공지사항 관리</MenuItem>
             </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">AI
-        </MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/aiadmin">
-                <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
-            </Link>
-        </Menu>
-    </Dropdown>
-</DropdownGroup>
-
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral" size="lg">AI</MenuButton>
+                    <Menu variant="plain">
+                        <Link to="/aiadmin">
+                            <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+            </DropdownGroup>
+     
         </PageContainer>
     );
-}
+};
+
 export default Wordadmin;

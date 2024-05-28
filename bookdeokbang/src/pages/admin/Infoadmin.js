@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -17,7 +17,7 @@ const PageContainer = styled.div`
     position: relative;
     width: 100%;
     min-height: 100vh;
-    display: flex;      
+    display: flex;
     background-color: ${theme.colors.beige};
     justify-content: center;
     align-items: center;
@@ -65,7 +65,7 @@ const StyledTableCell = styled.td`
     border: 1px solid #dddddd;
     text-align: left;
     font-size: 14px;
-    cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 만듦 */
+    cursor: pointer;
 `;
 
 const SearchContainer = styled.div`
@@ -102,31 +102,52 @@ const NoticeButton = styled(Button)`
     color: black;
     border-radius: 4px;
     cursor: pointer;
-
 `;
-
-function createData(title, content) {
-    return { title, content };
-}
-
-const initialRows = [
-    createData('제목 1', '내용 1' ),
-    createData('제목 2', '내용 2' ),
-    createData('제목 3', '내용 3'),
-];
 
 const Infoadmin = () => {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
     const [searchTerm, setSearchTerm] = useState("");
-    const [rows, setRows] = useState(initialRows);
+    const [rows, setRows] = useState([]);
     const { register, handleSubmit, setValue } = useForm();
+
+    useEffect(() => {
+        const fetchInitialNotices = async () => {
+            try {
+                const response = await TokenAxios.get(`${API_BASE_URL}/v1/admin/notices/all`);
+                setRows(response.data.result);
+            } catch (error) {
+                console.error("Error fetching initial notices:", error);
+            }
+        };
+
+        fetchInitialNotices();
+    }, [API_BASE_URL]);
 
     const fetchNotices = async (data) => {
         try {
             const response = await TokenAxios.post(`${API_BASE_URL}/v1/admin/notices`, data);
             console.log(response.data.result);
+            const updatedResponse = await TokenAxios.get(`${API_BASE_URL}/v1/admin/notices`);
+            setRows(updatedResponse.data.result);
         } catch (error) {
             console.error("Error fetching notices:", error);
+        }
+    };
+
+    const updateNotice = async (noticeId, data) => {
+        try {
+            const response = await TokenAxios.patch(`${API_BASE_URL}/v1/admin/notices/${noticeId}/update`, data);
+            if (response.data.isSuccess) {
+                console.log("Updated notice:", response.data.result);
+                const updatedResponse = await TokenAxios.get(`${API_BASE_URL}/v1/admin/notices`);
+                setRows(updatedResponse.data.result);
+            } else {
+                console.error("Error updating notice:", response.data.message);
+                Swal.fire("수정 실패", response.data.message, "error");
+            }
+        } catch (error) {
+            console.error("Error updating notice:", error);
+            Swal.fire("수정 실패", "공지사항을 수정하는 도중 오류가 발생했습니다.", "error");
         }
     };
 
@@ -135,7 +156,7 @@ const Infoadmin = () => {
     };
 
     const handleSearch = () => {
-        const filteredRows = initialRows.filter(row =>
+        const filteredRows = rows.filter(row =>
             row.title.includes(searchTerm) || row.content.includes(searchTerm)
         );
         setRows(filteredRows);
@@ -155,14 +176,14 @@ const Infoadmin = () => {
                 if (!title || !content) {
                     Swal.showValidationMessage('제목과 내용을 모두 입력해주세요.');
                 }
-                return { title: title, content: content };
+                return { title, content };
             }
         }).then((result) => {
             if (result.isConfirmed) {
                 const { title, content } = result.value;
                 setValue("title", title);
                 setValue("content", content);
-                setValue("pinned", false);  // 'pinned' 값을 false로 설정
+                setValue("pinned", false);
                 handleSubmit(fetchNotices)();
                 Swal.fire("저장되었습니다!", "", "success");
             } else {
@@ -171,16 +192,15 @@ const Infoadmin = () => {
         });
     };
 
-    const handleNameClick = (title, content) => {
+    const handleNameClick = (title, content, id) => {
         Swal.fire({
             title: '공지사항 내용',
-            text: content, // 클릭한 행의 내용을 표시
+            text: content,
             showCancelButton: true,
-            confirmButtonText: '수정하기', // 확인 버튼을 수정하기로 변경
-            cancelButtonText: '삭제하기', // 취소 버튼을 삭제하기로 변경
+            confirmButtonText: '수정하기',
+            cancelButtonText: '삭제하기',
         }).then((result) => {
             if (result.isConfirmed) {
-                // 수정하기 버튼 클릭 시의 동작
                 Swal.fire({
                     title: '공지사항 수정',
                     html:
@@ -195,20 +215,21 @@ const Infoadmin = () => {
                         if (!title || !content) {
                             Swal.showValidationMessage('제목과 내용을 모두 입력해주세요.');
                         }
-                        return { title: title, content: content };
+                        return { title, content };
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const { title, content } = result.value;
-                        console.log("수정된 제목:", title);
-                        console.log("수정된 내용:", content);
+                        setValue("title", title);
+                        setValue("content", content);
+                        setValue("pinned", false);
+                        handleSubmit((data) => updateNotice(id, data))();
                         Swal.fire("저장되었습니다!", "", "success");
                     } else {
                         Swal.fire("수정이 취소되었습니다.", "", "error");
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                // 삭제하기 버튼 클릭 시의 동작
                 Swal.fire({
                     title: '삭제 확인',
                     text: '정말로 삭제하시겠습니까?',
@@ -220,7 +241,6 @@ const Infoadmin = () => {
                     cancelButtonText: '취소',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // 삭제하는 로직
                         console.log('삭제됨');
                         Swal.fire(
                             '삭제 완료',
@@ -235,91 +255,90 @@ const Infoadmin = () => {
 
     return (
         <PageContainer>
-            <form>
-                <SearchContainer>
-                    <SearchInput
-                        type="text"
-                        placeholder="제목을 입력하세요"
-                        value={searchTerm}
-                        onChange={handleInputChange}
-                    />
-                    <SearchButton onClick={handleSearch}>검색</SearchButton>
-                    <NoticeButton onClick={handleNotice}>공지사항 작성하기</NoticeButton>
-                </SearchContainer>
-                <TableContainer>
-                    <StyledTable>
-                        <thead>
-                            <tr>
-                                <StyledTableCell>등록 제목</StyledTableCell>
-                                <StyledTableCell>등록 내용</StyledTableCell>
+            <SearchContainer>
+                <SearchInput
+                    type="text"
+                    placeholder="제목을 입력하세요"
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                />
+                <SearchButton onClick={handleSearch}>검색</SearchButton>
+                <NoticeButton onClick={handleNotice}>공지사항 작성하기</NoticeButton>
+            </SearchContainer>
+            <TableContainer>
+                <StyledTable>
+                    <thead>
+                        <tr>
+                            <StyledTableCell>등록 제목</StyledTableCell>
+                            <StyledTableCell>등록 내용</StyledTableCell>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows.map((row, index) => (
+                            <tr key={index} onClick={() => handleNameClick(row.title, row.content, row.id)}>
+                                <StyledTableCell>{row.title}</StyledTableCell>
+                                <StyledTableCell>{row.content}</StyledTableCell>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {rows.map((row, index) => (
-                                <tr key={index}>
-                                    <StyledTableCell onClick={() => handleNameClick(row.title, row.content)}>
-                                        {row.title}
-                                    </StyledTableCell>
-                                    <StyledTableCell>{row.content}</StyledTableCell>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </StyledTable>
-                </TableContainer>
-                <Link to="/mainadmin">
-                    <Gramary>Gramary</Gramary>
-                </Link>
-                <TopRightGroup>
-                    <ButtonGroup
-                        color="neutral"
-                        orientation="horizontal"
-                        size="lg"
-                        spacing={0}
-                        variant="soft"
-                    >
-                        <Link to="/modifyadmin">
-                            <Button>관리자 정보 수정</Button>
+                        ))}
+                    </tbody>
+                </StyledTable>
+            </TableContainer>
+            <Link to="/mainadmin">
+                <Gramary>Gramary</Gramary>
+            </Link>
+            <TopRightGroup>
+                <ButtonGroup
+                    color="neutral"
+                    orientation="horizontal"
+                    size="lg"
+                    spacing={0}
+                    variant="soft"
+                >
+                    <Link to="/modifyadmin">
+                        <Button>관리자 정보 수정</Button>
+                    </Link>
+                    <Link to="/">
+                        <Button>로그아웃</Button>
+                    </Link>
+                </ButtonGroup>
+            </TopRightGroup>
+            <DropdownGroup>
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral" size="lg">USER</MenuButton>
+                    <Menu variant="plain">
+                        <Link to="/memberinfoadmin">
+                            <MenuItem color="neutral">사용자 정보 관리</MenuItem>
                         </Link>
-                        <Link to="/">
-                            <Button>로그아웃</Button>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral">DATA</MenuButton>
+                    <Menu>
+                        <Link to="/askadmin">
+                            <MenuItem color="neutral">문의 내역 관리</MenuItem>
                         </Link>
-                    </ButtonGroup>
-                </TopRightGroup>
-                <DropdownGroup>
-                    <Dropdown>
-                        <MenuButton variant="plain" color="neutral" size="lg">USER</MenuButton>
-                        <Menu variant="plain">
-                            <Link to="/memberinfoadmin">
-                                <MenuItem color="neutral">사용자 정보 관리</MenuItem>
-                            </Link>
-                        </Menu>
-                    </Dropdown>
-                    <Dropdown>
-                        <MenuButton variant="plain" color="neutral">DATA</MenuButton>
-                        <Menu>
-                            <Link to="/askadmin">
-                                <MenuItem color="neutral">문의 내역 관리</MenuItem>
-                            </Link>
-                            <Link to="/saveadmin">
-                                <MenuItem color="neutral">문장 데이터 관리</MenuItem>
-                            </Link>
-                            <Link to="/wordadmin">
-                                <MenuItem color="neutral">단어 데이터 관리</MenuItem>
-                            </Link>
-                        </Menu>
-                    </Dropdown>
-                    <Dropdown>
-                        <MenuButton variant="plain" color="neutral" size="lg">AI</MenuButton>
-                        <Menu variant="plain">
-                            <Link to="/aiadmin">
-                                <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
-                            </Link>
-                        </Menu>
-                    </Dropdown>
-                </DropdownGroup>
-            </form>
+                        <Link to="/saveadmin">
+                            <MenuItem color="neutral">문장 데이터 관리</MenuItem>
+                        </Link>
+                        <Link to="/wordadmin">
+                            <MenuItem color="neutral">단어 데이터 관리</MenuItem>
+                        </Link>
+                        <Link to="/infoadmin">
+                <MenuItem color="neutral">공지사항 관리</MenuItem>
+            </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton variant="plain" color="neutral" size="lg">AI</MenuButton>
+                    <Menu variant="plain">
+                        <Link to="/aiadmin">
+                            <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+            </DropdownGroup>
         </PageContainer>
     );
-}
+};
 
 export default Infoadmin;

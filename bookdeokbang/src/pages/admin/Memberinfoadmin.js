@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -97,14 +97,20 @@ function createData(No, name, ID) {
 }
 
 const initialRows = [
-    createData(1, '김가천', 'A123'),
-    createData(2, '이철수', 'B456'),
-    createData(3, '박영희', 'C789'),
+    createData(1, '김가천', 'A123@naver.com'),
+    createData(2, '이철수', 'B456@naver.com'),
+    createData(3, '박영희', 'C789@naver.com'),
+    createData(3, 'string', 'string'),
 ];
 
 const Memberinfoadmin = () => {
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
     const [searchTerm, setSearchTerm] = useState("");
     const [rows, setRows] = useState(initialRows);
+
+    useEffect(() => {
+        console.log("Component mounted");
+    }, []);
 
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
@@ -131,12 +137,27 @@ const Memberinfoadmin = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 console.log(`Withdraw confirmed for user ID: ${ID}`);
-                // 탈퇴 작업 수행
+                withdrawUser(ID);
             } else {
                 console.log(`Withdraw canceled for user ID: ${ID}`);
-                // 탈퇴 취소
             }
         });
+    };
+    const withdrawUser = async (userID) => {
+        try {
+            const response = await TokenAxios.delete(`${API_BASE_URL}/v1/admin/users/${userID}/delete`);
+            if (response.isSuccess) {
+                // 성공적으로 삭제됨을 알리는 메시지를 표시하거나 다른 작업 수행
+                Swal.fire("탈퇴 성공", "사용자가 성공적으로 탈퇴되었습니다.", "success");
+            } else {
+                // 실패 시 메시지 표시
+                Swal.fire("탈퇴 실패", "사용자 탈퇴 중 오류가 발생했습니다.", "error");
+            }
+        } catch (error) {
+            console.error("Error withdrawing user:", error);
+            // 탈퇴 중 오류가 발생한 경우에 대한 에러 처리
+            Swal.fire("탈퇴 실패", "사용자 탈퇴 중 오류가 발생했습니다.", "error");
+        }
     };
 
     return (

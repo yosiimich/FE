@@ -110,9 +110,6 @@ const Login = () => {
   const handleModeChange = (isAdmin) => {
     setMode(isAdmin ? "admin" : "user");
   };
-  const handleButtonClidk = () => {
-    console.log("Clicked");
-  };
   const handleSignUp = () => {
     navigate("/signUp");
   };
@@ -130,7 +127,7 @@ const Login = () => {
         );
         console.log(res.data.result.data);
         const token = res.data.result.accessToken;
-        console.log(token);
+        
         console.log("success");
         localStorage.setItem("accessToken", token);
         navigate("/main");
@@ -201,7 +198,7 @@ const Login = () => {
               {...register("password")}
             />
           </LoginContainer>
-          <Button type="submit" onClick={handleButtonClidk()}>
+          <Button type="submit">
             로그인
           </Button>
           <Button variant="text" onClick={handleSignUp}>

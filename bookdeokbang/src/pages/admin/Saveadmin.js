@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import Dropdown from '@mui/joy/Dropdown';
 import Table from '@mui/joy/Table';
 import { Link } from "react-router-dom"; 
 import { TokenAxios } from "../../apis/CommonAxios";
+import Swal from 'sweetalert2'; // Import sweetalert2
 
 const PageContainer = styled.div`
     position: relative;
@@ -75,13 +76,33 @@ const rows = [
     createData(240517, '저장 문장 3'),
 ];
 
-const handleNameClick = (ID) => {
-    // 사용자에 대한 작업 수행
-    console.log(`Clicked user ID: ${ID}`);
-    // 예시: 사용자 프로필 표시 또는 수정
-};
-
 const Saveadmin = () => {
+    const [generatedSentence, setGeneratedSentence] = useState(""); // Define state for generated sentence
+
+    const handleGenerateSentence = () => {
+        Swal.fire({
+            title: '문장 생성하기',
+            input: 'text',
+            inputLabel: '문장',
+            inputPlaceholder: '문장을 입력하세요',
+            showCancelButton: true,
+            confirmButtonText: '등록',
+            cancelButtonText: '취소',
+            showLoaderOnConfirm: true,
+            preConfirm: (text) => {
+                // Here you can handle the submission of the sentence
+                // For now, just set it in the state and show an alert
+                setGeneratedSentence(text);
+                return Promise.resolve();
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('등록 완료!', '문장이 성공적으로 등록되었습니다.', 'success');
+            }
+        });
+    };
+
     return (
         <PageContainer>
             <TableContainer>
@@ -123,57 +144,57 @@ const Saveadmin = () => {
                 </ButtonGroup>
             </TopRightGroup>
             <DropdownGroup>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">USER</MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/memberinfoadmin">
-                <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
-            </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-        >DATA</MenuButton>
-        <Menu>
-            <Link to="/askadmin">
-                <MenuItem color="neutral">문의 관리</MenuItem> 
-            </Link>
-            <Link to="/saveadmin">
-                <MenuItem color="neutral">문장 관리</MenuItem> 
-            </Link>
-            <Link to="/wordadmin">
-                <MenuItem color="neutral">단어 관리</MenuItem>
-            </Link>
-            <Link to="/infoadmin">
-                <MenuItem color="neutral">공지사항 관리</MenuItem>
-            </Link>
-        </Menu>
-    </Dropdown>
-    <Dropdown>
-        <MenuButton
-            variant="plain"
-            color="neutral"
-            size="lg">AI
-        </MenuButton>
-        <Menu
-            variant="plain"
-        >
-            <Link to="/aiadmin">
-                <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
-            </Link>
-        </Menu>
-    </Dropdown>
-</DropdownGroup>
-
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                        size="lg">USER</MenuButton>
+                    <Menu
+                        variant="plain"
+                    >
+                        <Link to="/memberinfoadmin">
+                            <MenuItem color="neutral">사용자 정보 관리</MenuItem> 
+                        </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                    >DATA</MenuButton>
+                    <Menu>
+                        <Link to="/askadmin">
+                            <MenuItem color="neutral">문의 관리</MenuItem> 
+                        </Link>
+                        <Link to="/saveadmin">
+                            <MenuItem color="neutral">문장 관리</MenuItem> 
+                        </Link>
+                        <Link to="/wordadmin">
+                            <MenuItem color="neutral">단어 관리</MenuItem>
+                        </Link>
+                        <Link to="/infoadmin">
+                            <MenuItem color="neutral">공지사항 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+                <Dropdown>
+                    <MenuButton
+                        variant="plain"
+                        color="neutral"
+                        size="lg">AI
+                    </MenuButton>
+                    <Menu
+                        variant="plain"
+                    >
+                        <Link to="/aiadmin">
+                            <MenuItem color="neutral">모델 정보 및 관리</MenuItem>
+                        </Link>
+                    </Menu>
+                </Dropdown>
+            </DropdownGroup>
+            <Button onClick={handleGenerateSentence}>문장 생성하기</Button>
         </PageContainer>
     );
-}
+};
 
 export default Saveadmin;
