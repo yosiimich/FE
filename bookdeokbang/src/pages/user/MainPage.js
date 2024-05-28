@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from '../../styles/commonTheme';
-import { useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 사용
+import { useNavigate } from 'react-router-dom';
 import SvgIcon from "@mui/material/SvgIcon";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ContactsIcon from '@mui/icons-material/ImportContacts';
 import { Link } from 'react-router-dom';
-import { TokenAxios } from "../../apis/CommonAxios"; // TokenAxios 추가
+import { TokenAxios } from "../../apis/CommonAxios";
+import { useForm } from "react-hook-form";
 
 const Base = styled.div`
     width: 100%;
@@ -83,6 +84,7 @@ const SmallWhiteBox = styled.div`
     align-items: center;
     cursor: pointer;
 `;
+
 const SmallBlackBox = styled.div`
     width: 80px;
     height: 80px;
@@ -122,11 +124,11 @@ const Info = styled.h1`
     font-family: 'Logo';
     text-align: center;
 `;
+
 const Info2 = styled.h1`
     font-size: 15px;
     font-family: 'Logo';
     text-align: center;
-
 `;
 
 const Voca = styled.h1`
@@ -138,55 +140,87 @@ const Voca = styled.h1`
 
 const MainPage = () => {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
-    const [selectedImageUrl, setSelectedImageUrl] = useState('');
-    const navigate = useNavigate(); 
+    
+    const { handleSubmit } = useForm();
+    const navigate = useNavigate();
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const handleGalleryImage = () => {
         const input = document.createElement('input');
-      
         input.type = 'file';
         input.accept = 'image/*';
         input.onchange = (e) => {
             const file = e.target.files[0];
-            setSelectedImageUrl(URL.createObjectURL(file));
-            navigate(`/ocr?url=${selectedImageUrl}`);
+            handleSubmit(() => handleImageSubmit(file))(); // 바로 파일 객체를 전달하도록 수정
         };
         input.click();
     };
-    
-
-    const handleContactsClick = () => {
-        navigate('/studynote');
+    const readFileAsArrayBuffer = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file); // 파일을 배열 버퍼로 읽음
+        });
     };
+    const handleImageSubmit = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append('type', 'SENTENCE');
+            formData.append('file', file); 
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            
+    
+            const res = await TokenAxios.post(`${API_BASE_URL}/v1/image/upload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'json'
+            }); 
+
+            console.log('Response:', res);
+    
+            if (res.data ) {
+                console.log('Navigating to /ocr'); 
+                navigate(`/ocr`);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const fetchWords = async () => {
         try {
             const response = await TokenAxios.get(`${API_BASE_URL}/v1/words/all`);
-            console.log(response.data.result); // API 응답 데이터 확인
+            //console.log(response.data.result); // API 응답 데이터 확인
         } catch (error) {
             console.error("Error fetching words:", error);
         }
     };
 
-    fetchWords();
-
     useEffect(() => {
-       
-    }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+        fetchWords();
+    }, []);
+
+    const handleContactsClick = () => {
+        navigate('/studynote');
+    };
 
     return (
         <Base>
+         <form onSubmit={handleSubmit(handleImageSubmit)}>
             <Container>
                 <Container_Head>
                     <Title>Gramary</Title>
                     <Menu>
                         <MenuItem>
-                        <Link to="/mypage">마이페이지</Link>
+                            <Link to="/mypage">마이페이지</Link>
                         </MenuItem>
                         <MenuItem>
-                        <Link to="/info">공지사항</Link>
+                            <Link to="/info">공지사항</Link>
                         </MenuItem>
-
                     </Menu>
                 </Container_Head>
 
@@ -195,7 +229,7 @@ const MainPage = () => {
                     <Info>공지사항 공지사항 공지사항</Info>
                     <Info>공지사항 공지사항 공지사항</Info>
                     <Info>공지사항 공지사항 공지사항</Info>
-                </WhiteBox1> 
+                </WhiteBox1>
 
                 <Spacer>
                     <Voca>Today's Vocabulary</Voca>
@@ -204,14 +238,14 @@ const MainPage = () => {
                     <Info>오늘의 영단어</Info>
                     <Info>보여주는 곳</Info>
                 </WhiteBox2>
+                
                 <GrayBox>
-                    
                     <SmallWhiteBox onClick={handleGalleryImage}>
                         <SvgIcon component={CameraAltIcon} fontSize="large" />
                     </SmallWhiteBox>
                     <Info2>모르는 영어 문장을 검색해보세요</Info2>
-                </GrayBox>
-
+                    </GrayBox>
+                
                 <GrayBox>
                     <SmallWhiteBox onClick={handleContactsClick}>
                         <SvgIcon component={ContactsIcon} fontSize="large" />
@@ -219,8 +253,9 @@ const MainPage = () => {
                     <Info2>나만의 영어 문장을 기록해보세요</Info2>
                 </GrayBox>
             </Container>
+            </form>
         </Base>
     );
-}
+};
 
 export default MainPage;

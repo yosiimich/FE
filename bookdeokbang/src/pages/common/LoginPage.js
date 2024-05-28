@@ -139,7 +139,8 @@ const Login = () => {
         const tokenData = res.data.result;
         console.log(data);
         localStorage.setItem("accessToken", tokenData.accessToken);
-        localStorage.setItem("role", tokenData.role);
+      
+      
         navigate("/mainadmin");
       }
     } catch (e) {

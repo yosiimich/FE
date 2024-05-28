@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 // 개발 환경과 프로덕션 환경에 따라 다른 baseURL 설정
 const baseURL =
   process.env.NODE_ENV === "production"
@@ -25,7 +26,10 @@ TokenAxios.interceptors.request.use(
   (config) => {
     const nextConfig = config;
     const accessToken = localStorage.getItem("accessToken");
-    nextConfig.headers.AccessToken = accessToken ? accessToken : "";
+//    nextConfig.headers.AccessToken = accessToken ? accessToken : "";
+if (accessToken) {
+  nextConfig.headers.Authorization = `Bearer ${accessToken}`;
+}
 
     return nextConfig;
   },
